@@ -52,10 +52,10 @@ def get_recipe(email):
         "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
     }
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    response = requests.request("GET", url, headers=headers, params=querystring).json()
 
     if response:
-        rsp = Response(response.json(), status=200, content_type="app.json")
+        rsp = Response(json.dumps(response), status=200, content_type="app.json")
     else:
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
 
