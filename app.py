@@ -1,6 +1,12 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import http.client
 import requests
+import json
+import pymysql
+import os
+# from storageService import StorageService
+# from user import User
+import boto3
 
 api = Flask(__name__)
 
@@ -23,13 +29,23 @@ def my_profile():
 
     return data.decode("utf-8")
 
-@app.route("/getrecipe", methods=["GET"])
-def get_recipe():
-    userid = request.args.get('userid', None)
-    print(userid)
+
+@app.route("/getrecipe/<email>", methods=["GET"])
+def get_recipe(email):
+    ingredients = StorageService.get_items(email)
+    user_id = User.get_userid_by_email(email)
+    allergy = User.get_user_allergy_by_id(user_id)
+
+    for food in allergy:
+        if food in ingredients:
+            del ingredients[food]
+
+    ingredients = ingredients.keys()
+    ingredients = ','.join(ingredients)
+
     url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients"
 
-    querystring = {"ingredients": "apples,flour,sugar", "number": "5", "ignorePantry": "true", "ranking": "1"}
+    querystring = {"ingredients": ingredients, "number": "5", "ignorePantry": "true", "ranking": "1"}
 
     headers = {
         "X-RapidAPI-Key": "0f4d0b06f4mshe2ebd0d399fb0fcp1186e5jsne33884e5779d",
@@ -38,11 +54,9 @@ def get_recipe():
 
     response = requests.request("GET", url, headers=headers, params=querystring)
 
-    result = response.json()
+    if response:
+        rsp = Response(response.json(), status=200, content_type="app.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
 
-    ret = []
-
-    for res in result:
-        ret.append(res['id'])
-
-    return ret
+    return rsp
