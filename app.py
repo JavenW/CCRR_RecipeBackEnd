@@ -32,11 +32,11 @@ def my_profile():
     return data.decode("utf-8")
 
 
-@app.route("/getrecipe", methods=["GET"])
-def get_recipe():
+@app.route("/getrecipe/<email>", methods=["GET"])
+def get_recipe(email):
     # storage_url = "http://127.0.0.1:5011/getitems/" + email
     # ingredients = requests.request("GET", storage_url).json()
-    email = request.args.get('email', None)
+    # email = request.args.get('email', None)
     ingredients = StorageService.get_items(email)
 
     print(ingredients)
@@ -70,4 +70,4 @@ def get_recipe():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5004)
+    app.run(host="0.0.0.0", port=5000)
