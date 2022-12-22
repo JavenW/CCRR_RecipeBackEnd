@@ -12,7 +12,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-@api.route('/detaileddata')
+@app.route('/detaileddata')
 def my_profile():
     conn = http.client.HTTPSConnection("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com")
 
@@ -52,7 +52,7 @@ def get_recipe(email):
 
     url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients"
 
-    querystring = {"ingredients": ingredients, "number": "5", "ignorePantry": "true", "ranking": "1"}
+    querystring = {"ingredients": ingredients, "number": "15", "ignorePantry": "true", "ranking": "1"}
 
     headers = {
         "X-RapidAPI-Key": "0f4d0b06f4mshe2ebd0d399fb0fcp1186e5jsne33884e5779d",
