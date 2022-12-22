@@ -1,14 +1,16 @@
 from flask import Flask, request, Response
-import http.client
 import requests
+import http.client
 import json
 import pymysql
 import os
-# from storageService import StorageService
-# from user import User
+from user import User
+from storageService import StorageService
 import boto3
+from flask_cors import CORS
 
-api = Flask(__name__)
+app = Flask(__name__)
+CORS(app)
 
 @api.route('/detaileddata')
 def my_profile():
@@ -30,9 +32,14 @@ def my_profile():
     return data.decode("utf-8")
 
 
-@app.route("/getrecipe/<email>", methods=["GET"])
-def get_recipe(email):
+@app.route("/getrecipe", methods=["GET"])
+def get_recipe():
+    # storage_url = "http://127.0.0.1:5011/getitems/" + email
+    # ingredients = requests.request("GET", storage_url).json()
+    email = request.args.get('email', None)
     ingredients = StorageService.get_items(email)
+
+    print(ingredients)
     user_id = User.get_userid_by_email(email)
     allergy = User.get_user_allergy_by_id(user_id)
 
@@ -60,3 +67,7 @@ def get_recipe(email):
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
 
     return rsp
+
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5004)
