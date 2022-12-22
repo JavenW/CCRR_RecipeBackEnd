@@ -5,15 +5,17 @@ import json
 import pymysql
 import os
 from user import User
+from receipe_rec import ReceipeRec
 from storageService import StorageService
+
 import boto3
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/detaileddata')
-def my_profile():
+@app.route('/detaileddata/<id>', methods=["GET"])
+def detailed_data(id):
     conn = http.client.HTTPSConnection("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com")
 
     headers = {
@@ -21,7 +23,7 @@ def my_profile():
         'X-RapidAPI-Host': "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
         }
 
-    conn.request("GET", "/recipes/479101/information", headers=headers)
+    conn.request("GET", "/recipes/" + id + "information", headers=headers)
 
     res = conn.getresponse()
     data = res.read()
@@ -68,6 +70,17 @@ def get_recipe(email):
 
     return rsp
 
+@app.route("/randomreceipe", methods=["GET"])
+def get_random_recei():
+
+    result = ReceipeRec.get_random_receipe()
+
+    if result:
+        rsp = Response(json.dumps(result), status=200, content_type="app.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+
+    return rsp
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
