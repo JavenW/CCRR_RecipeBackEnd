@@ -23,7 +23,7 @@ def detailed_data(id):
         'X-RapidAPI-Host': "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
         }
 
-    conn.request("GET", "/recipes/" + id + "information", headers=headers)
+    conn.request("GET", "/recipes/" + id + "/information", headers=headers)
 
     res = conn.getresponse()
     data = res.read()
