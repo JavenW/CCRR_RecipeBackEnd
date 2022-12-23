@@ -27,9 +27,6 @@ def detailed_data(id):
 
     res = conn.getresponse()
     data = res.read()
-    print("lalal")
-    print(data.decode("utf-8"))
-
 
     return data.decode("utf-8")
 
