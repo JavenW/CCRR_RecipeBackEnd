@@ -19,7 +19,7 @@ def detailed_data(id):
     conn = http.client.HTTPSConnection("spoonacular-recipe-food-nutrition-v1.p.rapidapi.com")
 
     headers = {
-        'X-RapidAPI-Key': "d0a33d5f84msh255c7930db96d6ap1d6ee0jsn992a6ed22da7",
+        'X-RapidAPI-Key': "xxxxx",
         'X-RapidAPI-Host': "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
         }
 
